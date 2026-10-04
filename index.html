@@ -373,6 +373,7 @@ const CONFIG = {
   foundingTotal: 5,
   adminPin: "1015",                                  // 현장 전에 바꿀 것
   idPrefix: "KES",
+  version: "v6",
   exportEndpoint: "https://doortokorea.com/api/survey-export"   // 이메일 전송(인터넷 필요). 받는 주소는 서버에 고정(hello@doortokorea.com)
 };
 const KEY = "dtk_kes2026_responses_v1", META = "dtk_kes2026_meta_v1";
@@ -448,7 +449,7 @@ function setBar(html){ const b = $("#bar"); b.hidden = !html; $("#barin").innerH
 function updateProg(){
   const total = 8, cur = Math.min(step, total);
   $("#prog").innerHTML = Array.from({length: total}, (_,i)=>`<i class="${i < cur ? "on":""}"></i>`).join("");
-  $("#count").textContent = `${mem.responses.length} saved on this device`;
+  $("#count").textContent = `${mem.responses.length} saved on this device · ${CONFIG.version}`;
 }
 function valid(){
   const s = STEPS[step];
