@@ -1,5 +1,5 @@
 // Offline cache for the KES survey. Bump VERSION when files change so tablets pick up the new copy.
-const VERSION = "kes2026-v5";
+const VERSION = "kes2026-v6";
 const FILES = ["./", "index.html", "manifest.webmanifest"];
 
 self.addEventListener("install", e => {
@@ -11,7 +11,7 @@ self.addEventListener("activate", e => {
 self.addEventListener("fetch", e => {
   if (e.request.method !== "GET") return;
   e.respondWith(
-    fetch(e.request).then(res => {
+    fetch(e.request, {cache: "no-cache"}).then(res => {
       const copy = res.clone();
       caches.open(VERSION).then(c => c.put(e.request, copy));
       return res;
