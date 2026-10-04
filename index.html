@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0f172a">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Korea Follow-up Check</title>
+<style>
+:root{--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--bg:#f1f5f9;--panel:#fff;--brand:#2563eb;--brand-ink:#fff;--ok:#16a34a;--warn:#b45309}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
+body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+header.top{position:sticky;top:0;z-index:10;background:#0f172a;color:#fff;display:flex;align-items:center;gap:12px;padding:10px 18px}
+header.top .brand{font-weight:800;letter-spacing:.02em}
+header.top .prog{flex:1;display:flex;gap:4px}
+header.top .prog i{flex:1;height:5px;border-radius:3px;background:#334155}
+header.top .prog i.on{background:#60a5fa}
+header.top .n{font-size:12px;color:#94a3b8;white-space:nowrap}
+main{max-width:860px;margin:0 auto;padding:22px 18px 120px}
+#app > h1{font-size:30px;line-height:1.15;margin:4px 0 10px;font-weight:800}
+h2.sec{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--brand);margin:26px 0 10px;font-weight:800}
+p.lead{font-size:18px;line-height:1.5;color:#334155;margin:0 0 14px}
+.q{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:14px}
+.q .l{font-size:17px;font-weight:700;line-height:1.35;margin-bottom:4px}
+.q .h{font-size:13px;color:var(--muted);margin-bottom:10px}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.opt{border:2px solid var(--line);background:#fff;border-radius:12px;padding:12px 14px;font-size:16px;line-height:1.2;color:var(--ink);cursor:pointer;min-height:48px;text-align:left}
+.opt.on{border-color:var(--brand);background:#eff4ff;color:#1e3a8a;font-weight:700}
+.opt.block{width:100%}
+input[type=text],input[type=email],input[type=tel],textarea,select{width:100%;font:inherit;font-size:17px;padding:13px 14px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}
+input:focus,textarea:focus{outline:none;border-color:var(--brand)}
+label.f{display:block;font-size:14px;font-weight:700;margin:12px 0 6px}
+label.f small{font-weight:400;color:var(--muted)}
+.navbar{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);border-top:1px solid var(--line);padding:12px 18px calc(12px + env(safe-area-inset-bottom));display:flex;gap:10px;justify-content:center;z-index:9}
+.navbar .in{width:100%;max-width:860px;display:flex;gap:10px}
+button.btn{border:0;border-radius:14px;padding:16px 22px;font-size:18px;font-weight:700;cursor:pointer;font-family:inherit}
+button.btn.pri{background:var(--brand);color:#fff;flex:1}
+button.btn.pri:disabled{background:#94a3b8}
+button.btn.sec{background:#e2e8f0;color:#0f172a}
+button.btn.ghost{background:transparent;color:var(--muted);font-weight:600;font-size:15px;padding:12px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin-bottom:14px}
+.panel.hero{background:#0f172a;color:#fff;border:0}
+.panel.hero h3{margin:0 0 6px;font-size:22px}
+.panel.hero p,.panel.hero li{color:#e2e8f0;font-size:16px;line-height:1.5}
+.panel ul{margin:8px 0 0;padding-left:20px}
+.choice{display:block;width:100%;text-align:left;border:0;border-radius:16px;padding:20px 22px;margin-bottom:12px;font-family:inherit;cursor:pointer}
+.choice.main{background:var(--brand);color:#fff}
+.choice.main b{font-size:22px;display:block;margin-bottom:4px}
+.choice.main span{font-size:15px;opacity:.95}
+.choice.alt{background:#fff;border:2px solid var(--line);color:var(--ink)}
+.choice.alt b{font-size:18px}
+.choice.alt span{display:block;font-size:14px;color:var(--muted);margin-top:2px}
+.link{background:none;border:0;color:var(--muted);text-decoration:underline;font-size:16px;padding:14px 4px;cursor:pointer;font-family:inherit}
+.consent{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.45;margin-top:14px;color:#334155}
+.consent input{width:22px;height:22px;margin-top:2px;flex:none}
+.err{color:#b91c1c;font-size:14px;margin-top:8px}
+.hint{font-size:13px;color:var(--muted);margin-top:8px}
+.badge{display:inline-block;background:#dcfce7;color:#166534;border-radius:999px;padding:4px 10px;font-size:13px;font-weight:700}
+.stage{display:flex;justify-content:center}
+.fit{transform-origin:top left}
+.tiny{position:fixed;right:10px;bottom:84px;z-index:8}
+.tiny button{background:none;border:0;color:#cbd5e1;font-size:11px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:700}
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.55);display:grid;place-items:center;z-index:30;padding:18px}
+.modal .box{background:#fff;border-radius:18px;padding:20px;width:100%;max-width:480px}
+@media print{
+  header.top,.navbar,.tiny,.noprint{display:none!important}
+  html,body{background:#fff}
+  main{padding:0;max-width:none}
+  .fit{transform:none!important}
+  @page{size:A4;margin:0}
+}
+</style>
+<style>
+.page{width:794px;height:1123px;background:var(--paper);box-shadow:0 8px 30px rgba(15,23,42,.18);display:flex;flex-direction:column;overflow:hidden}
+
+/* header */
+.head{background:var(--accent);color:#fff;padding:34px 44px 28px;display:flex;gap:24px;align-items:center}
+.head .txt{flex:1}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.85;font-weight:600}
+h1{margin:6px 0 6px;font-size:38px;line-height:1.1;font-weight:800}
+.tag{font-size:17px;opacity:.95;margin:0 0 14px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:rgba(255,255,255,.18);border-radius:8px;padding:5px 10px;font-size:12.5px}
+.chip b{font-weight:700}
+.icon{width:112px;height:112px;flex:none;background:rgba(255,255,255,.14);border-radius:24px;display:grid;place-items:center}
+.icon svg{width:76px;height:76px}
+
+.body{padding:24px 44px 0;display:flex;flex-direction:column;gap:20px;flex:1;justify-content:space-between;padding-bottom:22px}
+h2{margin:0 0 8px;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:800}
+
+/* readiness */
+.ready{display:grid;grid-template-columns:1fr 1fr;gap:8px 28px}
+.meter{display:flex;align-items:center;gap:10px;font-size:13px}
+.meter span.l{width:112px;color:var(--muted)}
+.meter .bar{display:flex;gap:4px;flex:1}
+.meter .bar i{height:10px;flex:1;border-radius:3px;background:var(--line)}
+.meter .bar i.on{background:var(--accent)}
+.note{font-size:11px;color:var(--muted);margin-top:6px}
+
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.card{border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.card ul{margin:0;padding-left:18px;font-size:14.5px;line-height:1.55}
+.card li{margin-bottom:4px}
+.card p{margin:0;font-size:14.5px;line-height:1.6;color:#1e293b}
+
+/* timeline */
+.tl{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;position:relative}
+.tl .step{border-radius:14px;background:var(--accent-soft);padding:12px 14px;position:relative}
+.tl .step::after{content:"";position:absolute;right:-10px;top:50%;width:8px;height:8px;border-top:2px solid var(--accent);border-right:2px solid var(--accent);transform:translateY(-50%) rotate(45deg)}
+.tl .step:last-child::after{display:none}
+.tl .day{font-size:11.5px;font-weight:800;color:var(--accent);letter-spacing:.06em;text-transform:uppercase}
+.tl .what{font-size:14px;line-height:1.5;margin-top:5px}
+
+/* checklist */
+.check{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px}
+.check div{display:flex;gap:9px;font-size:14px;line-height:1.45}
+.check div::before{content:"";flex:none;width:15px;height:15px;margin-top:1px;border:2px solid var(--accent);border-radius:4px}
+
+/* cta */
+.cta{margin-top:auto;margin-bottom:0;background:#0f172a;color:#fff;padding:20px 44px;display:flex;gap:22px;align-items:center}
+.cta .main{flex:1}
+.cta h3{margin:0 0 4px;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:#93c5fd}
+.cta .big{font-size:20px;font-weight:800;line-height:1.25;margin-bottom:6px}
+.cta p{margin:0 0 8px;font-size:13px;line-height:1.5;color:#e2e8f0}
+.cta .terms{font-size:11.5px;color:#cbd5e1;line-height:1.5}
+.cta .terms b{color:#fff}
+.qr{flex:none;width:128px;text-align:center}
+.qr .box{width:128px;height:128px;background:#fff;border-radius:12px;display:grid;place-items:center;color:#0f172a;font-size:12px;line-height:1.3;padding:10px}
+.qr .cap{font-size:11.5px;margin-top:6px;color:#e2e8f0}
+.foot{padding:8px 44px;font-size:10.5px;color:var(--muted);display:flex;justify-content:space-between}
+
+
+</style>
+</head>
+<body>
+<header class="top"><span class="brand">Door to Korea</span><span class="prog" id="prog"></span><span class="n" id="count"></span></header>
+<main id="app"></main>
+<div class="navbar noprint" id="bar" hidden><div class="in" id="barin"></div></div>
+<div class="tiny noprint"><button id="adminLink" type="button">admin</button></div>
+
+<script>
+const TYPES = {
+  handshake: {
+    name:"The Dropped Handshake", color:"#2563eb", soft:"#eff4ff",
+    tag:"The contact is made. The follow-through is missing.",
+    sounds:[
+      "You met Korean companies at KES and want to keep the conversation going",
+      "Your follow-ups are in English, and replies are slow or silent",
+      "No one on your team speaks Korean or works Korean hours"],
+    why:"A first meeting at a fair creates interest, not commitment. Without a concrete next step set quickly, the interest fades. Language and time difference make the next step slip, and each week it slips, the contact cools.",
+    plan:[
+      ["Day 1–2","List every Korean contact: company, person, what they asked for, what you promised"],
+      ["Day 3–5","Send each contact one short message: thanks, one concrete next step, a proposed date"],
+      ["Day 6–7","Prepare the one file they asked for (spec sheet, price range, sample terms) as a single clear PDF"]],
+    ready:[
+      "Who are your Korean contacts, and what did each one ask for?",
+      "What can you promise on samples, lead time and price range?",
+      "Who on your side can join a call, and at what hours?",
+      "What would “next step done” look like in 30 days?"],
+    help:"We take over the Korean contacts you already have, follow up in Korean, and set the next step. If you also want new Korean companies reached, the free first step covers that too.",
+    scores:[4,1,3,1],
+    icon:'<svg viewBox="0 0 80 80" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 44c10-2 16-12 24-12 6 0 8 4 14 4"/><path d="M74 44c-10-2-16-12-24-12-6 0-8 4-14 4" stroke-dasharray="1 9"/><path d="M30 50l8 8M38 44l8 8M44 36l10 10"/><circle cx="40" cy="24" r="3" fill="#fff"/></svg>'
+  },
+  door: {
+    name:"The Locked Door", color:"#ea580c", soft:"#fff4ec",
+    tag:"A good product, and no one to open the door.",
+    sounds:[
+      "No Korean customers yet",
+      "You are not sure which role at a Korean company is the right buyer, or how to reach them",
+      "English cold emails feel unlikely to work"],
+    why:"A message from an unknown company in a foreign language is easy to ignore in any market. A first contact works better when it is in the reader’s language and says clearly why it is relevant to them.",
+    plan:[
+      ["Day 1–2","Choose one product and one buyer role to lead with"],
+      ["Day 3–5","List 20 target companies from public sources (exhibitor lists, industry associations, company pages)"],
+      ["Day 6–7","Write a five-line first message with one specific reason why each company should care"]],
+    ready:[
+      "Which one product do you lead with?",
+      "Which Korean company would clearly use it, and in which department?",
+      "What proof do you have (customers elsewhere, tests, certifications)?",
+      "What do you want from the first call?"],
+    help:"We find 20 Korean companies that fit your product and reach them in Korean, for you. You get a summary of who replied and what they said.",
+    scores:[1,1,3,1],
+    icon:'<svg viewBox="0 0 80 80" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><rect x="20" y="8" width="40" height="64" rx="4"/><circle cx="50" cy="42" r="3" fill="#fff"/><path d="M8 72h64"/><rect x="28" y="30" width="14" height="12" rx="2" fill="#fff" stroke="none"/><path d="M31 30v-4a4 4 0 018 0v4"/></svg>'
+  },
+  maze: {
+    name:"The Maze Walker", color:"#7c3aed", soft:"#f4efff",
+    tag:"The talks are real. The path to a deal isn’t clear.",
+    sounds:[
+      "Korean companies are interested but ask about certification, price or local support",
+      "You are unsure whether to sell directly or through a distributor",
+      "Each question feels like a new hurdle"],
+    why:"Early interest turns into concrete questions: can you meet local requirements, who supports the product, at what price. Questions left unanswered stall the conversation, even when interest is real.",
+    plan:[
+      ["Day 1–2","Write down every question Korean contacts have asked. Sort: answer now / needs research / needs a decision"],
+      ["Day 3–5","Decide your position on distributor vs direct, and your price floor"],
+      ["Day 6–7","Put the answers on one page, “Korea answers,” to reuse in every conversation"]],
+    ready:[
+      "What certification does your product category need in Korea?",
+      "What price range and terms can you offer?",
+      "Who handles support and warranty?",
+      "Direct or distributor, and why?"],
+    help:"We handle the Korean-language replies, hold the first round of talks on price and terms within limits you set in writing, and bring technical or regulatory questions back to you with clear next steps. We do not give certification or legal advice. We help get the right questions to the right experts.",
+    scores:[4,2,3,1],
+    icon:'<svg viewBox="0 0 80 80" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 70V10h60v60H10z"/><path d="M10 56h30V40H24V24h32v32H40M56 56h14"/></svg>'
+  },
+  map: {
+    name:"The Map Seeker", color:"#16a34a", soft:"#ecfbf1",
+    tag:"Before the door, which door?",
+    sounds:[
+      "You are not sure who in Korea buys your product",
+      "You are weighing large companies against mid-size ones, or startups",
+      "You want a small test first, not a big commitment"],
+    why:"Without a clear definition of the buyer, outreach scatters and the results are hard to read. A small, structured test often gives you clearer answers than more desk research.",
+    plan:[
+      ["Day 1–2","Write two or three buyer hypotheses (company type × role)"],
+      ["Day 3–5","Pick 20 companies split across the hypotheses, for example 10 and 10"],
+      ["Day 6–7","Reach out, record who replies, and compare the hypotheses"]],
+    ready:[
+      "What problem do you solve, and for whom?",
+      "Which hypothesis do you believe most, and why?",
+      "What reply would count as success?",
+      "How many weeks can you give this test?"],
+    help:"We run the test for you: 20 Korean companies across your hypotheses, reached in Korean in 7 days. You get a reply-based map of who is interested. With 20 companies this is a signal, not proof.",
+    scores:[1,2,1,1],
+    icon:'<svg viewBox="0 0 80 80" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 18l20-8 24 8 20-8v52l-20 8-24-8-20 8z"/><path d="M28 10v52M52 18v52"/><circle cx="40" cy="36" r="5" fill="#fff"/></svg>'
+  },
+  connected: {
+    name:"The Well-Connected", color:"#0d9488", soft:"#ebfaf8",
+    tag:"You have a partner. What is still missing?",
+    sounds:[
+      "You already have a Korean distributor or partner",
+      "You want more reach, or different kinds of customers",
+      "You are not looking to replace anyone"],
+    why:"One partner usually covers the customers they already know. The rest of the market, other segments or other buyer roles, often stays untouched.",
+    plan:[
+      ["Day 1–2","Ask your partner which Korean companies they are working with now"],
+      ["Day 3–5","Map the customer segments and buyer roles not yet covered"],
+      ["Day 6–7","Agree with your partner on goals and who handles what"]],
+    ready:[
+      "What does your partner agreement cover (territory, exclusivity, products)? Check it before approaching anyone else.",
+      "Which segments are not covered today?",
+      "What would your partner be comfortable with?",
+      "What would you measure after 90 days?"],
+    help:"We work only on the products or segments outside your partner’s scope, and we respect your agreement. If your partner is open to it, we can support them with extra follow-up in Korean.",
+    scores:[5,3,3,5],
+    icon:'<svg viewBox="0 0 80 80" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="40" r="8"/><circle cx="66" cy="40" r="8"/><path d="M22 40h36"/><circle cx="40" cy="16" r="7" stroke-dasharray="3 6"/><path d="M40 23v17" stroke-dasharray="3 6"/></svg>'
+  }
+};
+const ORDER = ["handshake","door","maze","map","connected"];
+const LABELS = ["Korean contact","Follow-up","Target clarity","Local support"];
+
+
+const ESC = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* Inner HTML of one report page. opts: {product, target, scores:[4], operator, email} */
+function reportHTML(key, opts){
+  const t = TYPES[key];
+  const sc = opts.scores || t.scores;
+  const product = opts.product || "your product";
+  const target = opts.target || "Korean customers";
+  return `
+    <div class="head">
+      <div class="txt">
+        <div class="eyebrow">Your Korea Follow-up Report · Your type</div>
+        <h1>${ESC(t.name)}</h1>
+        <p class="tag">${ESC(t.tag)}</p>
+        <div class="chips">
+          <div class="chip"><b>You sell</b> ${ESC(product)}</div>
+          <div class="chip"><b>Looking for</b> ${ESC(target)}</div>
+        </div>
+      </div>
+      <div class="icon">${t.icon}</div>
+    </div>
+    <div class="body">
+      <section>
+        <h2>Korea readiness (from your answers)</h2>
+        <div class="ready">
+          ${LABELS.map((l,i)=>`<div class="meter"><span class="l">${l}</span><span class="bar">${[1,2,3,4,5].map(n=>`<i class="${n<=sc[i]?'on':''}"></i>`).join("")}</span></div>`).join("")}
+        </div>
+        <div class="note">Self-reported, based on your survey answers. Not an assessment of your business.</div>
+      </section>
+      <div class="cols">
+        <section class="card"><h2>Sounds like you</h2><ul>${t.sounds.map(s=>`<li>${ESC(s)}</li>`).join("")}</ul></section>
+        <section class="card"><h2>Why this happens</h2><p>${ESC(t.why)}</p></section>
+      </div>
+      <section>
+        <h2>Your next 7 days</h2>
+        <div class="tl">${t.plan.map(p=>`<div class="step"><div class="day">${ESC(p[0])}</div><div class="what">${ESC(p[1])}</div></div>`).join("")}</div>
+      </section>
+      <section>
+        <h2>Be ready to answer</h2>
+        <div class="check">${t.ready.map(r=>`<div>${ESC(r)}</div>`).join("")}</div>
+      </section>
+    </div>
+    <div class="cta">
+      <div class="main">
+        <h3>What we can do · Founding Pilot</h3>
+        <div class="big">Your first step is free.</div>
+        <p>${ESC(t.help)}</p>
+        <div class="terms"><b>Free first step:</b> up to 3 products · 20 Korean companies · 7 days · in Korean.
+        <b>If no one replies and no meeting is set, you pay nothing.</b> In return, you allow us to use the result as a case study. Nothing is published until you approve the wording. 5 founding companies only.</div>
+      </div>
+      <div class="qr"><div class="box">Book a Korea Follow-up Plan Call<br><br>15 min · video</div><div class="cap">${ESC(opts.bookCaption || "Ask the interviewer, or reply to the email we send you")}</div></div>
+    </div>
+    <div class="foot"><span>${ESC(opts.operator || "Door to Korea, operated by Hyerin Park")} · ${ESC(opts.email || "hello@doortokorea.com")}</span><span>Based on your survey answers. Not legal or regulatory advice.</span></div>`;
+}
+
+</script>
+<script>
+/* ---------- config ---------- */
+const CONFIG = {
+  operator: "Door to Korea, operated by Hyerin Park",   // 처리 주체. 성명 확정 후 교체
+  email: "hello@doortokorea.com",                         // 서비스용 이메일 확정 후 교체
+  foundingTaken: 0,                                  // 홈페이지 FOUNDING_TAKEN과 같게
+  foundingTotal: 5,
+  adminPin: "1015",                                  // 현장 전에 바꿀 것
+  idPrefix: "KES"
+};
+const KEY = "dtk_kes2026_responses_v1", META = "dtk_kes2026_meta_v1";
+
+/* ---------- storage (localStorage, offline) ---------- */
+const store = {
+  get(k, d){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch(e){ return d; } },
+  set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch(e){ return false; } }
+};
+const mem = { responses: [], meta: {} };           // 저장 실패 시 메모리 보관
+function loadAll(){ mem.responses = store.get(KEY, mem.responses); mem.meta = store.get(META, {counter:0, interviewer:"", exportedAt:0, exportedCount:0}); }
+function persist(){ const a = store.set(KEY, mem.responses), b = store.set(META, mem.meta); return a && b; }
+
+/* ---------- question definitions ---------- */
+const Q = {
+  q1:{multi:false, label:"Where are you with sales in Korea today?", opts:["Haven't tried yet","We have a Korean distributor or partner","A few customers or inquiries so far"]},
+  q2:{multi:false, label:"Have you met Korean companies at KES this week?", opts:["Yes, several, and I want to follow up","A few, not sure they will lead anywhere","Not yet"]},
+  q3:{multi:false, label:"What is the one thing that has held you back most in Korea?", opts:["Finding the right buyers","Following up: language and time difference","Getting Korean companies to trust us","Certification and regulation","Price and distribution structure","No one on our team to handle Korea"]},
+  q4:{multi:false, label:"What is your plan for Korea after KES?", opts:["No plan yet","Through the EU program","An agent or consultant","We'll handle it ourselves","Not sure"]},
+  q6:{multi:true, label:"Which industry? (select all that apply)", opts:["Semiconductors","Electronic components","AI / software","Robotics","Health","XR","Other"]},
+  q7:{multi:false, label:"Which kind of Korean customer are you looking for?", opts:["Large company","Mid-size or small company","Startup","Distributor","Not sure"]},
+  q8:{multi:true, max:2, label:"If this service existed, what would you want most? (choose 2)", opts:["Follow up with Korean companies I met at KES","Find new Korean buyers","Present and persuade on video calls","First-round talk on price and terms","Korean-language materials and pitch","Certification and regulation guidance","None of these"]},
+  q9:{multi:false, label:"How much have you spent so far on entering Korea?", opts:["None","Under $500","$500–$2,000","Over $2,000","Not sure"]},
+  q10:{multi:false, label:"Suppose this service worked for 4 weeks and produced real meetings with Korean buyers. What price would feel like a good value?", opts:["Under $500","$500–$1,000","$1,000–$2,000","$2,000–$4,000","Over $4,000","I would not pay for this"]},
+  q11:{multi:false, label:"At what price would it feel too expensive to even try?", opts:["Under $500","$500–$1,000","$1,000–$2,000","$2,000–$4,000","Over $4,000","I would not pay for this"]},
+  q12:{multi:false, label:"Which way of paying is easiest for you to accept?", opts:["Fixed fee, paid upfront","Small upfront fee plus a success fee","Success fee only","Free trial first, then decide"]},
+  q13:{multi:false, label:"Who decides on this kind of service?", opts:["Owner / CEO","Head of sales","Head of international business","Other"]}
+};
+const EXIT_REASONS = ["Already have Korean partners","Too early for us","Not sure it would work","Not relevant to our business","Other"];
+
+/* ---------- state ---------- */
+let a, step, flow;      // a = answers
+const STEPS = ["welcome","about","product","service","demand","pilot","result","choice","form","done"];
+
+function newSession(){
+  a = {q6:[], q8:[]};
+  step = 0; flow = null;
+  render();
+}
+
+/* ---------- type logic ---------- */
+function decideType(a){
+  const warm = a.q2 === Q.q2.opts[0] || a.q2 === Q.q2.opts[1] || a.q1 === Q.q1.opts[2];
+  if (a.q1 === Q.q1.opts[1]) return "connected";
+  const fit = [Q.q3.opts[3], Q.q3.opts[4]].includes(a.q3);
+  if (warm) return fit ? "maze" : "handshake";
+  return fit ? "map" : "door";
+}
+function computeScores(a){
+  const clamp = n => Math.max(1, Math.min(5, n));
+  let contact;
+  if (a.q1 === Q.q1.opts[1]) contact = 5;
+  else { contact = a.q2 === Q.q2.opts[0] ? 4 : a.q2 === Q.q2.opts[1] ? 3 : 1; if (a.q1 === Q.q1.opts[2]) contact += 1; }
+  const f = {"No plan yet":1,"Not sure":2,"We'll handle it ourselves":3,"Through the EU program":3,"An agent or consultant":4};
+  let follow = f[a.q4] || 2; if (a.q3 === Q.q3.opts[5]) follow -= 1;
+  let clarity = a.q7 === "Not sure" ? 1 : ((a.q7detail||"").trim() ? 5 : 3);
+  let local = a.q1 === Q.q1.opts[1] ? 5 : a.q4 === "An agent or consultant" ? 4 : a.q4 === "Through the EU program" ? 3 : 1;
+  return [clamp(contact), clamp(follow), clamp(clarity), clamp(local)];
+}
+function typeOfSession(){ return decideType(a); }
+function targetText(a){ return ((a.q7detail||"").trim()) || (a.q7 && a.q7 !== "Not sure" ? a.q7 : "Korean customers"); }
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const esc = ESC;
+function qBlock(id, extra){
+  const d = Q[id]; const sel = a[id];
+  const on = v => d.multi ? (sel||[]).includes(v) : sel === v;
+  return `<div class="q" data-qid="${id}"><div class="l">${esc(d.label)}</div>${extra||""}
+    <div class="opts">${d.opts.map(o=>`<button type="button" class="opt${on(o)?" on":""}" data-q="${id}" data-v="${esc(o)}">${esc(o)}</button>`).join("")}</div></div>`;
+}
+function setBar(html){ const b = $("#bar"); b.hidden = !html; $("#barin").innerHTML = html || ""; }
+function updateProg(){
+  const total = 8, cur = Math.min(step, total);
+  $("#prog").innerHTML = Array.from({length: total}, (_,i)=>`<i class="${i < cur ? "on":""}"></i>`).join("");
+  $("#count").textContent = `${mem.responses.length} saved on this device`;
+}
+function valid(){
+  const s = STEPS[step];
+  if (s === "about") return ["q1","q2","q3","q4"].every(k => a[k]);
+  if (s === "product") return (a.q5||"").trim() && a.q6.length && a.q7;
+  if (s === "demand") return a.q8.length && a.q10 && a.q12;
+  return true;
+}
+function refreshNext(){ const n = $("#next"); if (n) n.disabled = !valid(); }
+
+/* ---------- screens ---------- */
+function render(){
+  const s = STEPS[step]; const app = $("#app");
+  window.scrollTo(0,0); updateProg();
+  const fn = screens[s]; fn(app);
+  refreshNext();
+}
+function navBar(nextLabel, opts={}){
+  setBar(`${opts.noBack?"":'<button class="btn sec" id="back" type="button">Back</button>'}<button class="btn pri" id="next" type="button">${nextLabel}</button>`);
+}
+
+const screens = {
+  welcome(app){
+    app.innerHTML = `
+      <h1>Your Korea Follow-up Check</h1>
+      <p class="lead">5 minutes. Anonymous. At the end, you get a one-page report on where you stand with Korea, and what you can do next.</p>
+      <div class="panel"><b>No details needed to start.</b><div class="hint" style="font-size:15px;color:#334155">You choose at the end whether to leave your contact details.</div></div>
+      <label class="f">Interviewer <small>(not shown to the respondent)</small></label>
+      <input type="text" id="interviewer" value="${esc(mem.meta.interviewer||"")}" placeholder="Name or initials">`;
+    setBar(`<button class="btn pri" id="next" type="button">Start</button>`);
+  },
+  about(app){
+    app.innerHTML = `<h2 class="sec">About Korea</h2>${["q1","q2","q3","q4"].map(k=>qBlock(k)).join("")}`;
+    navBar("Next");
+  },
+  product(app){
+    app.innerHTML = `<h2 class="sec">About your product</h2>
+      <p class="lead" style="font-size:16px">Three quick questions. This lets us give you a more useful report.</p>
+      <div class="q"><div class="l">What do you sell? (one line)</div>
+        <input type="text" id="q5" value="${esc(a.q5||"")}" placeholder="e.g. Low-power AI vision opt for factory cameras"></div>
+      ${qBlock("q6")}
+      ${qBlock("q7", `<div class="h">And in a few words, which industry or role?</div><input type="text" id="q7detail" value="${esc(a.q7detail||"")}" placeholder="e.g. automotive sensor purchasing">`)}`;
+    navBar("Next");
+  },
+  service(app){
+    app.innerHTML = `
+      <div class="panel hero"><h3>What if you had a Korean sales rep for a pilot?</h3>
+      <p>A Korean-speaking sales rep presents your product to Korean companies on video calls, in Korean. After each call you get an English summary and clear next steps.</p></div>`;
+    navBar("Next");
+  },
+  demand(app){
+    app.innerHTML = `<h2 class="sec">What would you want?</h2>
+      ${qBlock("q8")}
+      ${qBlock("q9", '<div class="h">Optional</div>')}
+      ${qBlock("q10")}
+      ${qBlock("q11", '<div class="h">Optional</div>')}
+      ${qBlock("q12")}
+      ${qBlock("q13", '<div class="h">Optional</div>')}`;
+    navBar("Next");
+  },
+  pilot(app){
+    const left = Math.max(0, CONFIG.foundingTotal - CONFIG.foundingTaken);
+    app.innerHTML = `
+      <div class="panel hero"><h3>Founding Pilot: your first step is free</h3>
+      <p>We are starting with <b>${CONFIG.foundingTotal} founding companies</b>. For each:</p>
+      <ul>
+        <li><b>Free first step.</b> Up to <b>3 products</b>, we reach <b>20 Korean companies</b> in <b>7 days</b>, in Korean.</li>
+        <li><b>If Korean companies reply and further meetings are set</b>, we can talk about a next step together. <b>If not, you pay nothing.</b></li>
+        <li>In return, you allow us to use the result as a <b>case study</b>. Nothing is published until you approve the wording. We leave out confidential information.</li>
+      </ul></div>
+      <span class="badge">${left > 0 ? `${CONFIG.foundingTaken} of ${CONFIG.foundingTotal} spots taken` : "All spots taken. Join the waiting list."}</span>`;
+    navBar("Show my result");
+  },
+  result(app){
+    const t = typeOfSession();
+    app.innerHTML = `<div class="stage"><div class="fit" id="fit"><div class="page" id="page"></div></div></div>
+      <div class="hint noprint" style="text-align:center">Want a copy? You can get this as a PDF in the next step.</div>`;
+    const page = $("#page"); const T = TYPES[t];
+    page.style.setProperty("--accent", T.color); page.style.setProperty("--accent-soft", T.soft);
+    page.innerHTML = reportHTML(t, {product:a.q5, target:targetText(a), scores:computeScores(a), operator:CONFIG.operator, email:CONFIG.email});
+    fitReport();
+    navBar("Continue", {});
+  },
+  choice(app){
+    app.innerHTML = `<h1>What's next?</h1>
+      <button class="choice main" id="c-call" type="button"><b>Book a Korea Follow-up Plan Call</b><span>15 minutes, video. We confirm what your free first step would cover. No commitment.</span></button>
+      <button class="choice alt" id="c-report" type="button"><b>Send me my report as a PDF</b><span>Email only</span></button>
+      <div style="text-align:center"><button class="link" id="c-none" type="button">No thanks, finish anonymously</button></div>`;
+    setBar(`<button class="btn sec" id="back" type="button">Back</button>`);
+  },
+  form(app){
+    if (flow === "call") {
+      app.innerHTML = `<h1>Book a Korea Follow-up Plan Call</h1>
+        <p class="lead" style="font-size:16px">Fifteen minutes. We confirm what the free first step would cover for your products. No commitment.</p>
+        <div class="panel" style="font-size:14px"><b>Confirm:</b> ${esc(a.q5||"")} · ${esc((a.q6||[]).join(", "))}<br>Looking for: ${esc(targetText(a))}</div>
+        <label class="f">Company name</label><input type="text" id="f-company" value="${esc(a.company||"")}">
+        <label class="f">Email</label><input type="email" id="f-email" value="${esc(a.email||"")}" autocapitalize="off">
+        <label class="f">Phone</label><input type="tel" id="f-phone" value="${esc(a.phone||"")}">
+        <label class="f">Name <small>(optional)</small></label><input type="text" id="f-name" value="${esc(a.name||"")}">
+        <label class="f">Best days and times, in your time zone <small>(optional)</small></label><input type="text" id="f-time" value="${esc(a.besttime||"")}" placeholder="e.g. weekdays after 3 pm, Paris time">
+        ${consentHTML()}
+        <div class="err" id="ferr"></div>`;
+      navBarForm("Request the call");
+    } else if (flow === "report") {
+      app.innerHTML = `<h1>Send me my report</h1>
+        <p class="lead" style="font-size:16px">We will email your report as a PDF within 24 hours.</p>
+        <label class="f">Email</label><input type="email" id="f-email" value="${esc(a.email||"")}" autocapitalize="off">
+        ${consentHTML()}
+        <div class="err" id="ferr"></div>`;
+      navBarForm("Send my report");
+    } else {
+      app.innerHTML = `<h1>What is the main reason?</h1>
+        <div class="opts" style="flex-direction:column">${EXIT_REASONS.map(r=>`<button type="button" class="opt block${a.exit===r?" on":""}" data-q="exit" data-v="${esc(r)}">${esc(r)}</button>`).join("")}</div>
+        <div class="hint">Your answers stay anonymous.</div>`;
+      setBar(`<button class="btn sec" id="back" type="button">Back</button><button class="btn pri" id="finish" type="button">Finish</button>`);
+    }
+  },
+  done(app){
+    const msg = flow === "call" ? "We will email you a booking link within 24 hours, and your report too."
+              : flow === "report" ? "Your report is on its way within 24 hours."
+              : "Thank you for your time. Your answers stay anonymous.";
+    app.innerHTML = `<h1>Thank you!</h1><p class="lead">${esc(msg)}</p>
+      <div class="panel noprint" style="margin-top:26px"><b>Interviewer only</b>
+        <div class="hint" style="margin-bottom:8px">How interested was the respondent?</div>
+        <div class="opts" id="interest">${[["0","Not interested"],["1","Maybe"],["2","Interested"]].map(([v,l])=>`<button type="button" class="opt${(mem.responses.at(-1)||{}).interest===v?" on":""}" data-q="interest" data-v="${v}">${l}</button>`).join("")}</div>
+        <label class="f">Note</label><textarea id="inote" rows="3">${esc((mem.responses.at(-1)||{}).note||"")}</textarea></div>`;
+    setBar(`<button class="btn pri" id="again" type="button">Start a new survey</button>`);
+  }
+};
+function consentHTML(){
+  return `<label class="consent"><input type="checkbox" id="f-consent"><span>I agree to receive my report and to be contacted about Korean market entry by ${esc(CONFIG.operator)} at the details above. I can withdraw at any time by writing to ${esc(CONFIG.email)}.</span></label>`;
+}
+function navBarForm(label){
+  setBar(`<button class="btn sec" id="back" type="button">Back</button><button class="btn pri" id="submit" type="button">${label}</button>`);
+}
+function fitReport(){
+  const el = $("#fit"); if (!el) return;
+  const s = Math.min(1, ($("#app").clientWidth - 36) / 794);
+  el.style.transform = `scale(${s})`; el.style.width = "794px"; el.style.height = (1123*s)+"px";
+  $("#app").querySelector(".stage").style.justifyContent = "flex-start";
+}
+addEventListener("resize", fitReport);
+
+/* ---------- events ---------- */
+document.addEventListener("click", e => {
+  const opt = e.target.closest(".opt[data-q]");
+  if (opt){
+    const id = opt.dataset.q, v = opt.dataset.v;
+    if (id === "exit"){ a.exit = v; opt.parentElement.querySelectorAll(".opt").forEach(c=>c.classList.toggle("on", c===opt)); return; }
+    if (id === "interest"){ saveInterviewerNote({interest: v}); opt.parentElement.querySelectorAll(".opt").forEach(c=>c.classList.toggle("on", c===opt)); return; }
+    const d = Q[id];
+    if (d.multi){
+      const cur = a[id] || (a[id] = []);
+      const i = cur.indexOf(v);
+      if (i >= 0) cur.splice(i,1);
+      else { if (d.max && cur.length >= d.max) cur.shift(); cur.push(v); }
+      opt.parentElement.querySelectorAll(".opt").forEach(c=>c.classList.toggle("on", cur.includes(c.dataset.v)));
+    } else {
+      a[id] = (a[id] === v && ["q9","q11","q13"].includes(id)) ? "" : v;      // 선택형 선택 질문은 다시 누르면 해제
+      opt.parentElement.querySelectorAll(".opt").forEach(c=>c.classList.toggle("on", a[id] === c.dataset.v));
+    }
+    refreshNext(); return;
+  }
+  const id = e.target.closest("button")?.id; if (!id) return;
+  if (id === "next"){
+    if (STEPS[step] === "welcome"){ mem.meta.interviewer = ($("#interviewer").value||"").trim(); persist(); }
+    if (!valid()) return;
+    step++; render();
+  }
+  else if (id === "back"){ step = STEPS[step] === "form" ? STEPS.indexOf("choice") : Math.max(0, step-1); render(); }
+  else if (id === "c-call"){ flow = "call"; step = STEPS.indexOf("form"); render(); }
+  else if (id === "c-report"){ flow = "report"; step = STEPS.indexOf("form"); render(); }
+  else if (id === "c-none"){ flow = "none"; step = STEPS.indexOf("form"); render(); }
+  else if (id === "submit"){ submitForm(); }
+  else if (id === "finish"){ saveRecord(); step = STEPS.indexOf("done"); render(); }
+  else if (id === "again"){ newSession(); }
+  else if (id === "adminLink"){ openAdmin(false); }
+});
+document.addEventListener("input", e => {
+  const t = e.target;
+  if (t.id === "q5") a.q5 = t.value;
+  else if (t.id === "q7detail") a.q7detail = t.value;
+  else if (t.id === "inote") saveInterviewerNote({note: t.value});
+  refreshNext();
+});
+
+function submitForm(){
+  const em = ($("#f-email")?.value||"").trim();
+  const err = $("#ferr");
+  const emOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em);
+  if (!emOk){ err.textContent = "Please enter a valid email."; return; }
+  if (flow === "call"){
+    const co = $("#f-company").value.trim(), ph = $("#f-phone").value.trim();
+    if (!co || !ph){ err.textContent = "Company name and phone are required for a call."; return; }
+    a.company = co; a.phone = ph; a.name = $("#f-name").value.trim(); a.besttime = $("#f-time").value.trim();
+  }
+  if (!$("#f-consent").checked){ err.textContent = "Please tick the consent box to continue."; return; }
+  a.email = em; a.consent = new Date().toISOString();
+  saveRecord(); step = STEPS.indexOf("done"); render();
+}
+
+/* ---------- records ---------- */
+const COLS = ["id","timestamp","interviewer","type","choice","q1","q2","q3","q4","q5","q6","q7","q7detail","q8","q9","q10","q11","q12","q13","score_contact","score_followup","score_clarity","score_local","company","name","email","phone","besttime","consent_at","exit_reason","interest","note"];
+function saveRecord(){
+  const sc = computeScores(a);
+  mem.meta.counter = (mem.meta.counter||0) + 1;
+  const rec = {
+    id: `${CONFIG.idPrefix}-${String(mem.meta.counter).padStart(3,"0")}`,
+    timestamp: new Date().toISOString(),
+    interviewer: mem.meta.interviewer || "",
+    type: TYPES[typeOfSession()].name,
+    choice: flow === "call" ? "call" : flow === "report" ? "report" : "none",
+    q1:a.q1||"", q2:a.q2||"", q3:a.q3||"", q4:a.q4||"", q5:a.q5||"", q6:(a.q6||[]).join(" | "), q7:a.q7||"", q7detail:a.q7detail||"",
+    q8:(a.q8||[]).join(" | "), q9:a.q9||"", q10:a.q10||"", q11:a.q11||"", q12:a.q12||"", q13:a.q13||"",
+    score_contact:sc[0], score_followup:sc[1], score_clarity:sc[2], score_local:sc[3],
+    company:a.company||"", name:a.name||"", email:a.email||"", phone:a.phone||"", besttime:a.besttime||"", consent_at:a.consent||"",
+    exit_reason: flow === "none" ? (a.exit||"") : "", interest:"", note:""
+  };
+  mem.responses.push(rec);
+  const ok = persist();
+  if (!ok) alert("Warning: this device could not save the response. Export the data now (admin) and do not close this page.");
+}
+function saveInterviewerNote(patch){
+  const r = mem.responses[mem.responses.length-1]; if (!r) return;
+  Object.assign(r, patch); persist();
+}
+
+/* ---------- export ---------- */
+function csvCell(v){ v = String(v ?? ""); return /[",\n\r]/.test(v) ? `"${v.replace(/"/g,'""')}"` : v; }
+function toCSV(){ return "﻿" + [COLS.join(",")].concat(mem.responses.map(r => COLS.map(c => csvCell(r[c])).join(","))).join("\r\n"); }
+function download(name, text, type){
+  const blob = new Blob([text], {type}); const url = URL.createObjectURL(blob);
+  const link = document.createElement("a"); link.href = url; link.download = name; document.body.appendChild(link); link.click(); link.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 2000);
+  mem.meta.exportedAt = Date.now(); mem.meta.exportedCount = mem.responses.length; persist();
+}
+function stamp(){ return new Date().toISOString().slice(0,16).replace(/[:T]/g,"-"); }
+
+/* ---------- admin ---------- */
+function openAdmin(skipPin){
+  if (!skipPin){ const pin = prompt("Admin PIN"); if (pin !== CONFIG.adminPin) return; }
+  const un = mem.responses.length - (mem.meta.exportedCount||0);
+  const rows = mem.responses.slice().reverse().map(r=>`<tr><td>${esc(r.id)}</td><td>${esc((r.timestamp||"").slice(5,16).replace("T"," "))}</td><td>${esc(r.type)}</td><td>${esc(r.choice)}</td><td>${esc(r.q5)}</td><td>${esc(r.email)}</td></tr>`).join("");
+  setBar(`<button class="btn sec" id="adm-close" type="button">Close</button>`);
+  $("#app").innerHTML = `<h1>Admin</h1>
+    <div class="panel"><b>${mem.responses.length}</b> responses on this device. <b style="color:${un?"var(--warn)":"var(--ok)"}">${un} not exported yet.</b>
+      <div class="opts"><button class="btn pri" id="adm-csv" type="button">Download CSV</button><button class="btn sec" id="adm-json" type="button">Download JSON (backup)</button><button class="btn sec" id="adm-copy" type="button">Copy CSV</button></div>
+      <div class="hint">Export at least once a day. Browser data can be lost if the browser's site data is cleared.</div></div>
+    <table><tr><th>ID</th><th>Time</th><th>Type</th><th>Choice</th><th>Product</th><th>Email</th></tr>${rows || '<tr><td colspan="6">No responses yet.</td></tr>'}</table>
+    <div class="panel" style="margin-top:18px"><button class="btn sec" id="adm-del" type="button">Delete all data</button>
+      <div class="hint">Only after you have exported and checked the file.</div></div>`;
+  document.getElementById("adm-close").onclick = () => { newSession(); };
+  document.getElementById("adm-csv").onclick = () => download(`kes2026-survey-${stamp()}.csv`, toCSV(), "text/csv;charset=utf-8");
+  document.getElementById("adm-json").onclick = () => download(`kes2026-survey-${stamp()}.json`, JSON.stringify({meta:mem.meta,responses:mem.responses}, null, 2), "application/json");
+  document.getElementById("adm-copy").onclick = async () => { try { await navigator.clipboard.writeText(toCSV()); alert("Copied."); } catch(e){ alert("Copy failed. Use Download instead."); } };
+  document.getElementById("adm-del").onclick = () => {
+    if (!confirm("Delete ALL responses from this device?")) return;
+    if (prompt("Type DELETE to confirm") !== "DELETE") return;
+    mem.responses = []; mem.meta.exportedCount = 0; persist(); openAdmin(true);
+  };
+}
+
+/* ---------- boot ---------- */
+loadAll();
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) navigator.serviceWorker.register("sw.js").catch(()=>{});
+newSession();
+</script>
+</body>
+</html>
