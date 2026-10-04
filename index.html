@@ -319,7 +319,8 @@ const CONFIG = {
   foundingTaken: 0,                                  // 홈페이지 FOUNDING_TAKEN과 같게
   foundingTotal: 5,
   adminPin: "1015",                                  // 현장 전에 바꿀 것
-  idPrefix: "KES"
+  idPrefix: "KES",
+  exportEndpoint: "https://doortokorea.com/api/survey-export"   // 이메일 전송(인터넷 필요). 받는 주소는 서버에 고정(hello@doortokorea.com)
 };
 const KEY = "dtk_kes2026_responses_v1", META = "dtk_kes2026_meta_v1";
 
@@ -642,6 +643,8 @@ function openAdmin(skipPin){
   $("#app").innerHTML = `<h1>Admin</h1>
     <div class="panel"><b>${mem.responses.length}</b> responses on this device. <b style="color:${un?"var(--warn)":"var(--ok)"}">${un} not exported yet.</b>
       <div class="opts"><button class="btn pri" id="adm-csv" type="button">Download CSV</button><button class="btn sec" id="adm-json" type="button">Download JSON (backup)</button><button class="btn sec" id="adm-copy" type="button">Copy CSV</button></div>
+      <div class="opts"><button class="btn pri" id="adm-mail" type="button">Email CSV to ${esc(CONFIG.email)}</button></div>
+      <div class="hint" id="adm-mailmsg" role="status" aria-live="polite">Needs an internet connection. Sends the CSV and a JSON backup.</div>
       <div class="hint">Export at least once a day. Browser data can be lost if the browser's site data is cleared.</div></div>
     <table><tr><th>ID</th><th>Time</th><th>Type</th><th>Choice</th><th>Product</th><th>Email</th></tr>${rows || '<tr><td colspan="6">No responses yet.</td></tr>'}</table>
     <div class="panel" style="margin-top:18px"><button class="btn sec" id="adm-del" type="button">Delete all data</button>
@@ -649,6 +652,23 @@ function openAdmin(skipPin){
   document.getElementById("adm-close").onclick = () => { newSession(); };
   document.getElementById("adm-csv").onclick = () => download(`kes2026-survey-${stamp()}.csv`, toCSV(), "text/csv;charset=utf-8");
   document.getElementById("adm-json").onclick = () => download(`kes2026-survey-${stamp()}.json`, JSON.stringify({meta:mem.meta,responses:mem.responses}, null, 2), "application/json");
+  document.getElementById("adm-mail").onclick = async () => {
+    const btn = document.getElementById("adm-mail"), msg = document.getElementById("adm-mailmsg");
+    if (!mem.responses.length){ msg.textContent = "No responses to send yet."; return; }
+    if (!navigator.onLine){ msg.textContent = "No internet connection. Use Download instead, or try again when online."; return; }
+    if (!confirm("Email all " + mem.responses.length + " responses (with names, emails, phone numbers) to " + CONFIG.email + "?")) return;
+    btn.disabled = true; msg.textContent = "Sending…";
+    try {
+      const st = stamp();
+      const r = await fetch(CONFIG.exportEndpoint, {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({
+        count: mem.responses.length,
+        files: [{filename:`kes2026-survey-${st}.csv`, content: toCSV()}, {filename:`kes2026-survey-${st}.json`, content: JSON.stringify({meta:mem.meta,responses:mem.responses}, null, 2)}]})});
+      if (!r.ok) throw new Error(r.status);
+      mem.meta.exportedAt = Date.now(); mem.meta.exportedCount = mem.responses.length; persist();
+      msg.textContent = "Sent to " + CONFIG.email + ". Check the inbox (and spam) before deleting anything.";
+    } catch(e){ msg.textContent = "Could not send. Use Download CSV instead."; }
+    btn.disabled = false;
+  };
   document.getElementById("adm-copy").onclick = async () => { try { await navigator.clipboard.writeText(toCSV()); alert("Copied."); } catch(e){ alert("Copy failed. Use Download instead."); } };
   document.getElementById("adm-del").onclick = () => {
     if (!confirm("Delete ALL responses from this device?")) return;
