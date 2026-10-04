@@ -1,5 +1,5 @@
 // Offline cache for the KES survey. Bump VERSION when files change so tablets pick up the new copy.
-const VERSION = "kes2026-v3";
+const VERSION = "kes2026-v5";
 const FILES = ["./", "index.html", "manifest.webmanifest"];
 
 self.addEventListener("install", e => {
