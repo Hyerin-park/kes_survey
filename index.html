@@ -67,6 +67,60 @@ th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertic
 th{color:var(--muted);font-weight:700}
 .modal{position:fixed;inset:0;background:rgba(15,23,42,.55);display:grid;place-items:center;z-index:30;padding:18px}
 .modal .box{background:#fff;border-radius:18px;padding:20px;width:100%;max-width:480px}
+.pl-hero{background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%);color:#fff;border-radius:22px;padding:26px 24px 22px;margin-bottom:14px}
+.pl-eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#93c5fd;font-weight:800}
+.pl-h{font-size:32px;line-height:1.12;font-weight:800;margin:8px 0 10px}
+.pl-hero p{margin:0 0 16px;font-size:17px;line-height:1.5;color:#e2e8f0}
+.pl-spots{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pl-dot{width:38px;height:38px;border-radius:50%;border:2px dashed #60a5fa;display:grid;place-items:center;font-size:11px;font-weight:800;color:#93c5fd}
+.pl-dot.taken{background:#334155;border:2px solid #334155;color:#cbd5e1;font-size:16px}
+.pl-dot.you{width:auto;padding:0 12px;border-radius:999px;border:2px solid #fff;background:#fff;color:#1e3a8a;font-size:13px}
+.pl-left{margin-left:6px;font-size:14px;font-weight:700;color:#fde68a}
+.pl-nums{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:6px}
+.pl-nums div{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 8px;text-align:center}
+.pl-nums b{display:block;font-size:34px;line-height:1;color:var(--brand);font-weight:800}
+.pl-nums span{display:block;font-size:13px;color:var(--muted);margin-top:6px}
+.pl-nums .free{background:#16a34a;border-color:#16a34a}
+.pl-nums .free b,.pl-nums .free span{color:#fff}
+.pl-get{display:grid;gap:10px}
+.pl-get > div{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px}
+.pl-get i{flex:none;width:34px;height:34px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;font-style:normal;font-weight:800}
+.pl-get b{display:block;font-size:17px;margin-bottom:2px}
+.pl-get span{display:block;font-size:15px;line-height:1.45;color:#475569}
+.pl-tl{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.pl-tl > div{background:#eff4ff;border-radius:16px;padding:14px;position:relative}
+.pl-tl em{font-style:normal;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--brand)}
+.pl-tl b{display:block;font-size:17px;margin:4px 0}
+.pl-tl span{display:block;font-size:14px;line-height:1.4;color:#334155}
+.pl-two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.pl-two h3{margin:0 0 6px;font-size:18px}
+.pl-two p{margin:0 0 6px;font-size:15px;line-height:1.5}
+.pl-ok{background:#ecfdf5;border:2px solid #16a34a;border-radius:16px;padding:16px}
+.pl-ok .big{font-size:20px;font-weight:800;color:#166534}
+.pl-ret{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px}
+.pl-ret ul{margin:6px 0 0;padding-left:20px;font-size:15px;line-height:1.5}
+@media (max-width:640px){.pl-nums,.pl-tl{grid-template-columns:1fr 1fr}.pl-two{grid-template-columns:1fr}.pl-h{font-size:27px}}
+.pl-h{font-size:28px}
+.pl-phases{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.pl-ph{border-radius:20px;padding:18px 18px 16px;border:1px solid var(--line);background:#fff}
+.pl-ph.two{background:#fffbeb;border:2px solid #f59e0b;box-shadow:0 6px 20px rgba(245,158,11,.18)}
+.pl-tag{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--brand)}
+.pl-tag.gold{color:#b45309}
+.pl-price{font-size:38px;line-height:1.05;font-weight:800;margin:8px 0 4px;color:#0f172a}
+.pl-ph.one .pl-price{color:#16a34a}
+.pl-price s{display:block;font-size:16px;color:#94a3b8;font-weight:600;margin-bottom:2px}
+.pl-ph.two .pl-price{white-space:nowrap}
+.pl-sub{font-size:14px;font-weight:700;color:#475569;margin-bottom:10px}
+.pl-ph ul{margin:0;padding-left:20px;font-size:15px;line-height:1.5}
+.pl-ph li{margin-bottom:6px}
+.pl-why{background:#0f172a;color:#fff;border-radius:18px;padding:18px 20px;margin-bottom:6px}
+.pl-why h3{margin:0 0 6px;font-size:19px}
+.pl-why p{margin:0 0 8px;font-size:16px;line-height:1.5;color:#e2e8f0}
+.pl-why b{color:#fde68a}
+.pl-why ul{margin:0 0 8px;padding-left:20px;font-size:16px;line-height:1.55;color:#e2e8f0}
+.pl-why .small{font-size:13px;color:#94a3b8;margin:4px 0 0}
+.pl-ok{margin-top:14px}
+@media (max-width:640px){.pl-phases{grid-template-columns:1fr}.pl-h{font-size:24px}}
 @media print{
   header.top,.navbar,.tiny,.noprint{display:none!important}
   html,body{background:#fff}
@@ -302,8 +356,7 @@ function reportHTML(key, opts){
         <h3>What we can do · Founding Pilot</h3>
         <div class="big">Your first step is free.</div>
         <p>${ESC(t.help)}</p>
-        <div class="terms"><b>Free first step:</b> up to 3 products · 20 Korean companies · 7 days · in Korean.
-        <b>If no one replies and no meeting is set, you pay nothing.</b> In return, you allow us to use the result as a case study. Nothing is published until you approve the wording. 5 founding companies only.</div>
+        <div class="terms"><b>Founding Pilot.</b> <b>Phase 1 is free:</b> up to 3 products · 20 Korean companies · 7 days · in Korean. <b>Phase 2</b> (a four-week sales project) is about <b>20% of the regular price</b>, typically US$300–1,000, with no success fee. If no one replies, you pay nothing. These terms apply because founding companies agree to a <b>public case study</b>: your company name and results, published only after you approve the wording. 5 founding companies only.</div>
       </div>
       <div class="qr"><div class="box">Book a Korea Follow-up Plan Call<br><br>15 min · video</div><div class="cap">${ESC(opts.bookCaption || "Ask the interviewer, or reply to the email we send you")}</div></div>
     </div>
@@ -352,7 +405,7 @@ const EXIT_REASONS = ["Already have Korean partners","Too early for us","Not sur
 
 /* ---------- state ---------- */
 let a, step, flow;      // a = answers
-const STEPS = ["welcome","about","product","service","demand","pilot","result","choice","form","done"];
+const STEPS = ["welcome","about","product","service","demand","result","pilot","choice","form","done"];
 
 function newSession(){
   a = {q6:[], q8:[]};
@@ -457,17 +510,65 @@ const screens = {
     navBar("Next");
   },
   pilot(app){
-    const left = Math.max(0, CONFIG.foundingTotal - CONFIG.foundingTaken);
+    const total = CONFIG.foundingTotal, taken = Math.min(total, CONFIG.foundingTaken);
+    const left = total - taken;
+    const dots = Array.from({length: total}, (_,i)=> i < taken
+      ? '<span class="pl-dot taken">✓</span>'
+      : (i === taken ? '<span class="pl-dot you">You?</span>' : '<span class="pl-dot"></span>')).join("");
     app.innerHTML = `
-      <div class="panel hero"><h3>Founding Pilot: your first step is free</h3>
-      <p>We are starting with <b>${CONFIG.foundingTotal} founding companies</b>. For each:</p>
-      <ul>
-        <li><b>Free first step.</b> Up to <b>3 products</b>, we reach <b>20 Korean companies</b> in <b>7 days</b>, in Korean.</li>
-        <li><b>If Korean companies reply and further meetings are set</b>, we can talk about a next step together. <b>If not, you pay nothing.</b></li>
-        <li>In return, you allow us to use the result as a <b>case study</b>. Nothing is published until you approve the wording. We leave out confidential information.</li>
-      </ul></div>
-      <span class="badge">${left > 0 ? `${CONFIG.foundingTaken} of ${CONFIG.foundingTotal} spots taken` : "All spots taken. Join the waiting list."}</span>`;
-    navBar("Show my result");
+      <div class="pl-hero">
+        <div class="pl-eyebrow">Founding Pilot · limited to ${total} companies</div>
+        <div class="pl-h">A free first step. Then a Korean sales rep at about 20% of the regular price.</div>
+        <p>For founding companies, who agree to let us publish the result as a case study.</p>
+        <div class="pl-spots">${dots}<span class="pl-left">${left > 0 ? `${left} ${left === 1 ? "spot" : "spots"} left` : "All spots taken · join the waiting list"}</span></div>
+      </div>
+
+      <div class="pl-phases">
+        <div class="pl-ph one">
+          <span class="pl-tag">Phase 1 · Find and reach</span>
+          <div class="pl-price">Free</div>
+          <div class="pl-sub">up to 3 products · 20 Korean companies · 7 days</div>
+          <ul>
+            <li>A target list of 20 Korean companies matched to your product</li>
+            <li>First contact in Korean, sent for you (we can also take over Korean contacts you already have)</li>
+            <li>An English summary of every reply, and a clear recommendation</li>
+          </ul>
+        </div>
+        <div class="pl-ph two">
+          <span class="pl-tag gold">Phase 2 · Sell — the biggest benefit</span>
+          <div class="pl-price"><s>$1,500–5,000</s> $300–1,000</div>
+          <div class="pl-sub">for four weeks · about 20% of the regular price · no success fee</div>
+          <ul>
+            <li>A Korean-speaking sales rep represents you in video calls with the companies that responded</li>
+            <li>Moves each opportunity toward a decision: introductions, questions, first-round price talk within limits you set in writing</li>
+            <li>The exact fee depends on the number of companies and products, and is agreed with you before it starts</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pl-why">
+        <h3>Why we can offer this</h3>
+        <p>Door to Korea is collecting its first ${total} case studies. This offer exists <b>because founding companies agree to a public case study</b>:</p>
+        <ul>
+          <li>Your <b>company name</b> and what happened, with real data, may be published</li>
+          <li>You <b>approve the wording</b> before anything goes out</li>
+          <li>Confidential information stays out</li>
+        </ul>
+        <p class="small">If you prefer not to be named, this founding offer does not apply and we would quote standard terms instead.</p>
+      </div>
+
+      <h2 class="sec">Phase 1: how the 7 days work</h2>
+      <div class="pl-tl">
+        <div><em>Day 0</em><b>Brief</b><span>A 15-minute call to confirm your products and target buyers.</span></div>
+        <div><em>Day 1–2</em><b>Build the list</b><span>We research and choose the 20 companies.</span></div>
+        <div><em>Day 3–6</em><b>Reach out</b><span>We contact them in Korean, for you.</span></div>
+        <div><em>Day 7</em><b>Report</b><span>You get replies and next steps in English.</span></div>
+      </div>
+
+      <div class="pl-ok"><h3>Only if it works</h3>
+        <p>If a Korean company replies and asks for a further meeting, we ask whether you want to continue to Phase 2, and the fee is agreed only then.</p>
+        <p class="big">If nobody replies, the pilot ends and you pay nothing.</p></div>`;
+    navBar("Next: choose what's next");
   },
   result(app){
     const t = typeOfSession();
@@ -477,7 +578,7 @@ const screens = {
     page.style.setProperty("--accent", T.color); page.style.setProperty("--accent-soft", T.soft);
     page.innerHTML = reportHTML(t, {product:a.q5, target:targetText(a), scores:computeScores(a), operator:CONFIG.operator, email:CONFIG.email});
     fitReport();
-    navBar("Continue", {});
+    navBar("Next: your free first step", {});
   },
   choice(app){
     app.innerHTML = `<h1>What's next?</h1>
